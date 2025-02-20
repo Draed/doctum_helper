@@ -5,13 +5,13 @@ import inquirer
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import PathCompleter
 
-from utils.completers import CustomPathCompleter
+from utils.completers import RelativePathCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path
 
 # Get parameters
 parameters = get_parameters()
-default_json_file_path = parameters['doctum_path']
+default_doctum_path = parameters['doctum_path']
 
 ## Initialize blessed terminal
 term = Terminal()
@@ -26,14 +26,14 @@ def display_menu():
     return inquirer.prompt(questions)['action']
 
 def create_json_file():
-    completer = CustomPathCompleter(base_directory=default_json_file_path)
+    completer = RelativePathCompleter(base_directory=default_doctum_path)
     session = PromptSession(completer=completer, complete_while_typing=True)
 
-    json_file_path = session.prompt(
-        f"Enter the path for the new new doctum course [suggestions from {default_json_file_path}]: ",
+    json_file_path_question = session.prompt(
+        f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}]: ",
         completer=completer
     )
-    # json_file_path = f"{default_json_file_path}/{json_file_path_question}"
+    json_file_path = f"{default_doctum_path}/{json_file_path_question}"
 
     # Validate the JSON file path
     if not is_valid_json_path(term, json_file_path):

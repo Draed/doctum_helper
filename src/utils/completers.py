@@ -2,25 +2,24 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import Completer, Completion
 import os
 
-class CustomPathCompleter(Completer):
+class RelativePathCompleter(Completer):
     def __init__(self, base_directory):
-        self.base_directory = base_directory
+        self.base_directory = os.path.abspath(base_directory)
 
     def get_completions(self, document, complete_event):
         text = document.text_before_cursor
-        directory, _, _ = text.rpartition('/')
         
-        if not directory:
+        if not text:
             directory = self.base_directory
+        else:
+            if os.path.isabs(text):
+                return
+            directory = os.path.join(self.base_directory, text)
         
-        # List files in the directory
-        try:
-            if os.path.commonpath([directory, self.base_directory]) == self.base_directory:
-                for filename in os.listdir(directory):
-                    if filename.startswith(os.path.basename(text)):
-                        yield Completion(os.path.join(directory, filename), start_position=-len(text))
-        except FileNotFoundError:
-            pass
+        if os.path.exists(directory):
+            for filename in os.listdir(directory):
+                if filename.startswith(os.path.basename(text)):
+                    yield Completion(filename, start_position=-len(text))
 
 # Create a PromptSession
 session = PromptSession()
