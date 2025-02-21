@@ -61,28 +61,37 @@ def create_json_file():
     data['tags'] = [tag.strip() for tag in tags_input.split(',')]
     
     ## tasks
-    print(term.grey("Adding task to the doctum course : "))
     data['task_list'] = []
+    print(term.grey(data['task_list']))
+
+    print(term.blue("Adding task to the doctum course : "))
+    task_id=0
     while True:
-        task_name = input(term.green("    Enter task name (or 'done' to finish task add): "))
-        if task_name.lower() == 'done':
+        main_task_question = [
+            inquirer.Confirm("continue", message="Adding a new task"),
+            inquirer.Confirm("stop", message="Finishing addding tasks", default=True),
+        ]
+        main_task_answers = inquirer.prompt(main_task_question)
+
+        if main_task_answers: 
+            task_id = task_id + 1
+            task_description = input(term.green("    Enter task description: "))
+            task_duration = input(term.green("    Enter task duration (in minutes): "))
+            
+            # Validate task name and description
+            if not task_duration or not task_description:
+                print(term.red("    Task name and description cannot be empty. Please try again."))
+                continue
+            
+            data['task_list'].append({
+                "id": task_name,
+                "description": task_description,
+                "duration": task_duration
+            })
+        else:
             break
         
-        task_description = input(term.green("    Enter task description: "))
-        task_duration = input(term.green("    Enter task duration (in minutes): "))
-        
-        # Validate task name and description
-        if not task_name or not task_description:
-            print(term.red("    Task name and description cannot be empty. Please try again."))
-            continue
-        
-        data['task_list'].append({
-            "name": task_name,
-            "description": task_description,
-            "duration": task_duration
-        })
-    
-    # Validate achieved input
+    ## achieve
     while True:
         achieved_input = input(term.green("Is it achieved? (true/false): ")).lower()
         if achieved_input in ['true', 'false']:
@@ -91,10 +100,10 @@ def create_json_file():
         else:
             print(term.red("    Please enter 'true' or 'false'."))
 
-    # Create the JSON file
+    ## Create the JSON file
     try:
         with open(json_file_path, 'w') as json_file:
-            json.dump([data], json_file, indent=4)  # Create a list with the data
+            json.dump([data], json_file, indent=4)
         print(term.green(f"JSON file created at: {json_file_path}"))
     except Exception as e:
         print(term.red(f"Error creating JSON file: {e}"))
