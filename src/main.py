@@ -62,29 +62,32 @@ def create_json_file():
     
     ## tasks
     data['task_list'] = []
-    print(term.grey(data['task_list']))
+    print(term.grey(*data['task_list']))
 
     print(term.blue("Adding task to the doctum course : "))
     task_id=0
     while True:
         main_task_question = [
-            inquirer.Confirm("continue", message="Adding a new task"),
-            inquirer.Confirm("stop", message="Finishing addding tasks", default=True),
+            inquirer.Confirm("add_task", message="Adding a new task",default=False)
         ]
         main_task_answers = inquirer.prompt(main_task_question)
+        print(main_task_answers)
 
-        if main_task_answers: 
+        if main_task_answers['add_task']: 
             task_id = task_id + 1
+            ## task description
             task_description = input(term.green("    Enter task description: "))
+            if not task_description:
+                print(term.red("    Task description cannot be empty. Please try again."))
+                continue
+            ## task duration
             task_duration = input(term.green("    Enter task duration (in minutes): "))
-            
-            # Validate task name and description
-            if not task_duration or not task_description:
-                print(term.red("    Task name and description cannot be empty. Please try again."))
+            if not task_duration:
+                print(term.red("    Task duration cannot be empty. Please try again."))
                 continue
             
             data['task_list'].append({
-                "id": task_name,
+                "id": task_id,
                 "description": task_description,
                 "duration": task_duration
             })
