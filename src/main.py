@@ -9,7 +9,7 @@ from utils.completers import RelativePathCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path
 
-# Get parameters
+## Get parameters
 parameters = get_parameters()
 default_doctum_path = parameters['doctum_path']
 
@@ -26,26 +26,29 @@ def display_menu():
     return inquirer.prompt(questions)['action']
 
 def create_json_file():
+
+    ## custom completer
     completer = RelativePathCompleter(base_directory=default_doctum_path)
     session = PromptSession(completer=completer, complete_while_typing=True)
 
+    ## json file question
     json_file_path_question = session.prompt(
         f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}]: ",
         completer=completer
     )
     json_file_path = f"{default_doctum_path}/{json_file_path_question}"
 
-    # Validate the JSON file path
+    ## json file answer validation
     if not is_valid_json_path(term, json_file_path):
-        return  # Exit the function if the path is invalid
+        return
 
-    # Create the directory if it does not exist
+    ## Create the directory path if it does not exist
     directory = os.path.dirname(json_file_path)
     if directory and not os.path.exists(directory):
         os.makedirs(directory)
         print(term.green(f"Created directory: {directory}"))
 
-    # Gather data for the JSON structure
+    ## Gather data for the JSON file content
     data = {}
     data['name'] = input(term.green("Enter the name: "))
     data['description'] = input(term.green("Enter the description: "))
@@ -53,18 +56,20 @@ def create_json_file():
     data['complexity'] = input(term.green("Enter the complexity (low, medium, high): "))
     data['added_date'] = input(term.green("Enter the added date (YYYY-MM-DD): "))
     
-    # Gather tags
+    ## tags
     tags_input = input(term.green("Enter tags (comma-separated): "))
     data['tags'] = [tag.strip() for tag in tags_input.split(',')]
     
-    # Gather task list with indentation and input format checks
+    ## tasks
+    print(term.grey("Adding task to the doctum course : "))
     data['task_list'] = []
     while True:
-        task_name = input(term.green("    Enter task name (or 'done' to finish): "))
+        task_name = input(term.green("    Enter task name (or 'done' to finish task add): "))
         if task_name.lower() == 'done':
             break
         
         task_description = input(term.green("    Enter task description: "))
+        task_duration = input(term.green("    Enter task duration (in minutes): "))
         
         # Validate task name and description
         if not task_name or not task_description:
@@ -73,7 +78,8 @@ def create_json_file():
         
         data['task_list'].append({
             "name": task_name,
-            "description": task_description
+            "description": task_description,
+            "duration": task_duration
         })
     
     # Validate achieved input

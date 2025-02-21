@@ -26,3 +26,12 @@ A simple terminal application that help writing doctum content (courses) with co
     - added date : current date
     - duration : 60 
     - achieved : false
+
+- fix bug on completion when select existing file and not a dir
+- prevent writing existing json file course
+- add a feature to edit json file ?
+- don't add task name (input), just use incremental (task1, task2,...)
+- add a completion custom for task description :
+    - read article
+    - watch video
+    - ...
