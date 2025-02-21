@@ -1,13 +1,15 @@
 import json
 import os
-from blessed import Terminal
+import datetime
 import inquirer
+
+from blessed import Terminal
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import PathCompleter
 
 from utils.completers import RelativePathCompleter
 from utils.parameters import get_parameters, edit_parameters
-from utils.validators import is_valid_json_path
+from utils.validators import is_valid_json_path, null_validate
 
 ## Get parameters
 parameters = get_parameters()
@@ -27,7 +29,7 @@ def display_menu():
 
 def create_json_file():
 
-    ## custom completer
+    ## custom completer instanciation
     completer = RelativePathCompleter(base_directory=default_doctum_path)
     session = PromptSession(completer=completer, complete_while_typing=True)
 
@@ -48,30 +50,41 @@ def create_json_file():
         os.makedirs(directory)
         print(term.green(f"Created directory: {directory}"))
 
-    ## Gather data for the JSON file content
-    data = {}
-    data['name'] = input(term.green("Enter the name: "))
-    data['description'] = input(term.green("Enter the description: "))
-    data['estimated_duration'] = input(term.green("Enter the estimated duration (in minutes): "))
-    data['complexity'] = input(term.green("Enter the complexity (low, medium, high): "))
-    data['added_date'] = input(term.green("Enter the added date (YYYY-MM-DD): "))
     
-    ## tags
-    tags_input = input(term.green("Enter tags (comma-separated): "))
-    data['tags'] = [tag.strip() for tag in tags_input.split(',')]
-    
-    ## tasks
-    data['task_list'] = []
-    print(term.grey(*data['task_list']))
+    ## default values
+    default_doctum_duration = 60
+    default_doctum_complexity = "medium"
+    default_doctum_date = datetime.datetime.now().isoformat()
 
-    print(term.blue("Adding task to the doctum course : "))
+    ## main doctum data questions
+    doctum_questions = [
+        inquirer.Text('doctum_name', message="Enter the course name", validate=null_validate),
+        inquirer.Text('doctum_description', message="Enter the course description", validate=null_validate),
+        inquirer.Text('doctum_duration', message="Enter the course estimated duration (in minutes)", default=default_doctum_duration, validate=null_validate),
+        inquirer.Text('doctum_difficulty', message="Enter the course estimated difficulty (low, medium, high)", default=default_doctum_complexity, validate=null_validate),
+        inquirer.Text('doctum_date_added', message="Enter the added date (YYYY-MM-DD)", default=default_doctum_date, validate=null_validate),
+        inquirer.Text('doctum_tags', message="Enter tags (comma-separated)", validate=null_validate)
+    ]
+    doctum_answers = inquirer.prompt(doctum_questions)
+
+    data = {}
+    data['name'] = doctum_answers['doctum_name']
+    data['description'] = doctum_answers['doctum_description']
+    data['estimated_duration'] = doctum_answers['doctum_duration']
+    data['difficulty'] = doctum_answers['doctum_difficulty']
+    data['added_date'] = doctum_answers['doctum_date_added']
+    data['tags'] = [tag.strip() for tag in doctum_answers['doctum_tags'].split(',')]
+    
+    ## tasks questions
+    data['task_list'] = []
+    print(term.blue("Doctum task definition"))
     task_id=0
     while True:
+        print(term.grey(task_data) for task_data in data['task_list'])
         main_task_question = [
             inquirer.Confirm("add_task", message="Adding a new task",default=False)
         ]
         main_task_answers = inquirer.prompt(main_task_question)
-        print(main_task_answers)
 
         if main_task_answers['add_task']: 
             task_id = task_id + 1
