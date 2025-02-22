@@ -1,3 +1,3 @@
 #!/bin/bash
-source ~/bin/doctum_helper/venv/bin/activate
-exec python ~/bin/doctum_helper/src/main.py "$@"
+source $HOME/$DOCTUM_HELPER_BIN_PATH_DEFAULT/venv/bin/activate
+python $HOME/$DOCTUM_HELPER_BIN_PATH_DEFAULT/src/main.py

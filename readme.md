@@ -2,22 +2,28 @@
 
 ## Description
 
-A simple terminal application that help writing doctum content (courses) with correct json format.
+A simple linux terminal application that help writing [doctum content (courses)](https://github.com/Draed/doctum_content) with correct json format.
 
 ## Prerequisites 
 
-- virtualvenv must already be installed
+- [virtualvenv](https://virtualenv.pypa.io/en/latest/installation.html) must already be installed
 
 ## Usage
 
 ### first installation 
 
-- launch install script :
-@TODO
+- Launch install script :
+```shell
+git clone https://github.com/Draed/doctum_helper.git
+cd doctum_helper
+bash install.sh
+```
+
+- Now the doctum_helper alias `dh` might be available, see [below doctum_helper usage](#doctum_helper-usage)
 
 ### doctum_helper usage
 
-@TODO
+- To start the program, just launch `dh` in the terminal and follow the instructions
 
 ## temp features 
 
