@@ -1,8 +1,31 @@
 # doctum_helper
 
+## temp features 
+
+- prevent writing existing json file course
+- add a completion for tags (from doctum_content dir listing)
+- add a completion custom for task description :
+    - read article
+    - watch video
+    - ...
+
 ## Description
 
 A simple linux terminal application that help writing [doctum content (courses)](https://github.com/Draed/doctum_content) with correct json format.
+
+### Components 
+
+- Bash (5.2.15(1)-release)
+- Python (v3.12.7)
+- [Python package](./src/requirements.txt)
+
+### Images
+
+<img src="./images/json_file_completion.png" alt="json_file_completion" width="1000"/>
+<br>
+<img src="./images/validator.png" alt="validator" width="500"/>
+<img src="./images/full_app.png" alt="full_app" width="500"/>
+
 
 ## Prerequisites 
 
@@ -21,15 +44,10 @@ bash install.sh
 
 - Now the doctum_helper alias `dh` might be available, see [below doctum_helper usage](#doctum_helper-usage)
 
-### doctum_helper usage
+### doctum_helper (dh) usage
 
 - To start the program, just launch `dh` in the terminal and follow the instructions
-
-## temp features 
-
-- prevent writing existing json file course
-- add a feature to edit json file ?
-- add a completion custom for task description :
-    - read article
-    - watch video
-    - ...
+- completion is available for 3 questions :
+    - Enter the path for the new new doctum course
+    - Enter the tag
+    - Enter the task description
