@@ -2,9 +2,7 @@
 
 ## temp features 
 
-- add parameters questions 
 - prevent writing existing json file course
-- add a completion for tags (from doctum_content dir listing)
 - add a completion custom for task description :
     - read article
     - watch video

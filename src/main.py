@@ -7,7 +7,7 @@ from blessed import Terminal
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import PathCompleter
 
-from utils.completers import RelativePathCompleter
+from utils.completers import RelativePathCompleter, TagCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path, null_validate, integer_validate, date_8601_validate, tag_validate
 
@@ -24,7 +24,7 @@ def create_json_file():
 
     ## custom completer instanciation
     completer = RelativePathCompleter(base_directory=default_doctum_path)
-    session = PromptSession(completer=completer, complete_while_typing=True)
+    session = PromptSession(complete_while_typing=True)
 
     ## json file question
     json_file_path_question = session.prompt(
@@ -53,7 +53,7 @@ def create_json_file():
         inquirer.Text('doctum_duration', message="Enter the course estimated duration (in minutes)", default=default_doctum_duration, validate=integer_validate),
         inquirer.List('doctum_difficulty', message="Enter the course estimated difficulty",choices=["low", "medium", "high"], default=default_doctum_complexity),
         inquirer.Text('doctum_date_added', message="Enter the added date (YYYY-MM-DD)", default=default_doctum_date, validate=date_8601_validate),
-        inquirer.Text('doctum_tags', message="Enter tags (comma-separated)", validate=tag_validate)
+        # inquirer.Text('doctum_tags', message="Enter tags (comma-separated)", validate=tag_validate)
     ]
     doctum_answers = inquirer.prompt(doctum_questions)
 
@@ -63,7 +63,15 @@ def create_json_file():
     data['estimated_duration'] = doctum_answers['doctum_duration']
     data['difficulty'] = doctum_answers['doctum_difficulty']
     data['added_date'] = doctum_answers['doctum_date_added']
-    data['tags'] = [tag.strip() for tag in doctum_answers['doctum_tags'].split(',')]
+    
+    ## tag question
+    tag_completer = TagCompleter(base_directory=default_doctum_path)
+    doctum_tags_question = session.prompt(
+        "Enter tags (comma-separated): ",
+        completer=tag_completer
+    )
+    data['tags'] = [tag.strip() for tag in doctum_tags_question.split(',') if tag.strip()]
+    print(data['tags'])
     
     ## tasks questions
     data['task_list'] = []
