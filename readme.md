@@ -21,10 +21,6 @@ A simple terminal application that help writing doctum content (courses) with co
 
 ## temp features 
 
-- Add format check on all question
-- Add default value for :
-    - achieved : false
-
 - prevent writing existing json file course
 - add a feature to edit json file ?
 - add a completion custom for task description :

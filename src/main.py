@@ -9,7 +9,7 @@ from prompt_toolkit.completion import PathCompleter
 
 from utils.completers import RelativePathCompleter
 from utils.parameters import get_parameters, edit_parameters
-from utils.validators import is_valid_json_path, null_validate
+from utils.validators import is_valid_json_path, null_validate, integer_validate, date_8601_validate, tag_validate
 
 ## Get parameters
 parameters = get_parameters()
@@ -54,16 +54,16 @@ def create_json_file():
     ## default values
     default_doctum_duration = 60
     default_doctum_complexity = "medium"
-    default_doctum_date = datetime.datetime.now().isoformat()
+    default_doctum_date = datetime.datetime.now().strftime('%Y-%m-%d')
 
     ## main doctum data questions
     doctum_questions = [
         inquirer.Text('doctum_name', message="Enter the course name", validate=null_validate),
         inquirer.Text('doctum_description', message="Enter the course description", validate=null_validate),
-        inquirer.Text('doctum_duration', message="Enter the course estimated duration (in minutes)", default=default_doctum_duration, validate=null_validate),
-        inquirer.Text('doctum_difficulty', message="Enter the course estimated difficulty (low, medium, high)", default=default_doctum_complexity, validate=null_validate),
-        inquirer.Text('doctum_date_added', message="Enter the added date (YYYY-MM-DD)", default=default_doctum_date, validate=null_validate),
-        inquirer.Text('doctum_tags', message="Enter tags (comma-separated)", validate=null_validate)
+        inquirer.Text('doctum_duration', message="Enter the course estimated duration (in minutes)", default=default_doctum_duration, validate=integer_validate),
+        inquirer.List('doctum_difficulty', message="Enter the course estimated difficulty",choices=["low", "medium", "high"], default=default_doctum_complexity),
+        inquirer.Text('doctum_date_added', message="Enter the added date (YYYY-MM-DD)", default=default_doctum_date, validate=date_8601_validate),
+        inquirer.Text('doctum_tags', message="Enter tags (comma-separated)", validate=tag_validate)
     ]
     doctum_answers = inquirer.prompt(doctum_questions)
 
@@ -90,13 +90,13 @@ def create_json_file():
             task_id = task_id + 1
             content_task_question = [
                 inquirer.Text("task_description", message="Enter task description", validate=null_validate),
-                inquirer.Text("task_duration", message="Enter task duration (in minutes)", validate=null_validate),
+                inquirer.Text("task_duration", message="Enter task duration (in minutes)", default=default_doctum_duration, validate=integer_validate),
             ]
-            main_task_answers = inquirer.prompt(content_task_question)
+            content_task_answers = inquirer.prompt(content_task_question)
             data['task_list'].append({
                 "id": task_id,
-                "description": content_task_question['task_description'],
-                "duration": content_task_question['task_duration']
+                "description": content_task_answers['task_description'],
+                "duration": content_task_answers['task_duration']
             })
         else:
             break
