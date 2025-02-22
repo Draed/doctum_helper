@@ -105,7 +105,7 @@ def create_json_file():
         else:
             break
         
-    ## achieved
+    ## Achieved
     achieved_question = [
         inquirer.Confirm("achieved", message="Is doctum course already achieved/done ?",default=False)
     ]
