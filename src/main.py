@@ -29,7 +29,7 @@ def create_json_file():
     ## json file question
     while True:
         json_file_path_question = session.prompt(
-            f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}]: ",
+            f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}] \n(use tab for completion): ",
             completer=completer
         )
         
@@ -75,7 +75,7 @@ def create_json_file():
     ## tag question
     tag_completer = TagCompleter(base_directory=default_doctum_path)
     doctum_tags_question = session.prompt(
-        "Enter tags (comma-separated): ",
+        "Enter tags (comma-separated) (use tab for completion): ",
         completer=tag_completer
     )
     data['tags'] = [tag.strip() for tag in doctum_tags_question.split(',') if tag.strip()]
@@ -97,7 +97,7 @@ def create_json_file():
 
             ## task description question (using completion)
             content_task_description = session.prompt(
-                "Enter task description: ",
+                "Enter task description (use tab for completion): ",
                 completer=list_completer
             )
             ## task duration question

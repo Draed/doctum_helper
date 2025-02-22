@@ -13,7 +13,6 @@ A simple linux terminal application that help writing [doctum content (courses)]
 ### Images
 
 <img src="./images/json_file_completion.png" alt="json_file_completion" width="1000"/>
-<br>
 <img src="./images/validator.png" alt="validator" width="500"/>
 <img src="./images/full_app.png" alt="full_app" width="500"/>
 
@@ -42,6 +41,9 @@ bash install.sh
 #### First start
 - At first start the doctum_helper will ask for default parameters :
     - the path to the doctum_content directory (where doctum_content should be stored)
+    - the default course duration (in minutes)
+    - the default course complexity (high, medium, low)
+    - Some default task description to be used as completion (read article, see videos about, ...)
 
 #### Completion
 - Completion is available for 3 questions (use tab to trigger completion) :
