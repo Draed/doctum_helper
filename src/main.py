@@ -7,7 +7,7 @@ from blessed import Terminal
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import PathCompleter
 
-from utils.completers import RelativePathCompleter, TagCompleter
+from utils.completers import RelativePathCompleter, TagCompleter, ListCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path, null_validate, integer_validate, date_8601_validate, tag_validate
 
@@ -71,10 +71,10 @@ def create_json_file():
         completer=tag_completer
     )
     data['tags'] = [tag.strip() for tag in doctum_tags_question.split(',') if tag.strip()]
-    print(data['tags'])
     
     ## tasks questions
     data['task_list'] = []
+    list_completer = ListCompleter(default_doctum_task_description)
     print(term.blue("Doctum task definition"))
     task_id=0
     while True:
@@ -86,14 +86,20 @@ def create_json_file():
 
         if main_task_answers['add_task']: 
             task_id = task_id + 1
+
+            ## task description question (using completion)
+            content_task_description = session.prompt(
+                "Enter task description: ",
+                completer=list_completer
+            )
+            ## task duration question
             content_task_question = [
-                inquirer.Text("task_description", message="Enter task description", validate=null_validate),
                 inquirer.Text("task_duration", message="Enter task duration (in minutes)", default=default_doctum_duration, validate=integer_validate),
             ]
             content_task_answers = inquirer.prompt(content_task_question)
             data['task_list'].append({
                 "id": task_id,
-                "description": content_task_answers['task_description'],
+                "description": content_task_description,
                 "duration": content_task_answers['task_duration']
             })
         else:
@@ -101,7 +107,7 @@ def create_json_file():
         
     ## achieved
     achieved_question = [
-        inquirer.Confirm("achieved", message="Is it achieved?",default=False)
+        inquirer.Confirm("achieved", message="Is doctum course already achieved/done ?",default=False)
     ]
     achieved_answer= inquirer.prompt(achieved_question)
     data['achieved'] = achieved_answer['achieved']
@@ -139,6 +145,7 @@ if __name__ == "__main__":
     default_doctum_path = parameters['doctum_path']
     default_doctum_duration = parameters['default_doctum_duration']
     default_doctum_complexity = parameters['default_doctum_complexity']
+    default_doctum_task_description = parameters['default_doctum_task_description']
 
     ## Initialize blessed terminal
     term = Terminal()

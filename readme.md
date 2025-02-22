@@ -3,10 +3,6 @@
 ## temp features 
 
 - prevent writing existing json file course
-- add a completion custom for task description :
-    - read article
-    - watch video
-    - ...
 
 ## Description
 

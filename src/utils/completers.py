@@ -53,7 +53,16 @@ class TagCompleter(Completer):
                 if dir_name.startswith(last_segment):
                     yield Completion(dir_name, start_position=-len(last_segment))
 
+class ListCompleter(Completer):
+    def __init__(self, items):
+        self.items = items
 
+    def get_completions(self, document, complete_event):
+        """Provide completions based on the current input."""
+        text = document.text_before_cursor.strip()
+        for item in self.items:
+            if item.startswith(text):
+                yield Completion(item, start_position=-len(text))
 
 
 
