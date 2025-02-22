@@ -23,8 +23,6 @@ A simple terminal application that help writing doctum content (courses) with co
 
 - Add format check on all question
 - Add default value for :
-    - added date : current date
-    - duration : 60 
     - achieved : false
 
 - prevent writing existing json file course

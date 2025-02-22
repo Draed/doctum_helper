@@ -88,33 +88,25 @@ def create_json_file():
 
         if main_task_answers['add_task']: 
             task_id = task_id + 1
-            ## task description
-            task_description = input(term.green("    Enter task description: "))
-            if not task_description:
-                print(term.red("    Task description cannot be empty. Please try again."))
-                continue
-            ## task duration
-            task_duration = input(term.green("    Enter task duration (in minutes): "))
-            if not task_duration:
-                print(term.red("    Task duration cannot be empty. Please try again."))
-                continue
-            
+            content_task_question = [
+                inquirer.Text("task_description", message="Enter task description", validate=null_validate),
+                inquirer.Text("task_duration", message="Enter task duration (in minutes)", validate=null_validate),
+            ]
+            main_task_answers = inquirer.prompt(content_task_question)
             data['task_list'].append({
                 "id": task_id,
-                "description": task_description,
-                "duration": task_duration
+                "description": content_task_question['task_description'],
+                "duration": content_task_question['task_duration']
             })
         else:
             break
         
-    ## achieve
-    while True:
-        achieved_input = input(term.green("Is it achieved? (true/false): ")).lower()
-        if achieved_input in ['true', 'false']:
-            data['achieved'] = achieved_input == 'true'
-            break
-        else:
-            print(term.red("    Please enter 'true' or 'false'."))
+    ## achieved
+    achieved_question = [
+        inquirer.Confirm("achieved", message="Is it achieved?",default=False)
+    ]
+    achieved_answer= inquirer.prompt(achieved_question)
+    data['achieved'] = achieved_answer['achieved']
 
     ## Create the JSON file
     try:
