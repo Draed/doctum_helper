@@ -2,6 +2,7 @@
 
 ## temp features 
 
+- add parameters questions 
 - prevent writing existing json file course
 - add a completion for tags (from doctum_content dir listing)
 - add a completion custom for task description :
@@ -26,14 +27,13 @@ A simple linux terminal application that help writing [doctum content (courses)]
 <img src="./images/validator.png" alt="validator" width="500"/>
 <img src="./images/full_app.png" alt="full_app" width="500"/>
 
-
 ## Prerequisites 
 
 - [virtualvenv](https://virtualenv.pypa.io/en/latest/installation.html) must already be installed
 
 ## Usage
 
-### first installation 
+### First installation 
 
 - Launch install script :
 ```shell
@@ -46,8 +46,15 @@ bash install.sh
 
 ### doctum_helper (dh) usage
 
+#### Launch doctum_helper 
 - To start the program, just launch `dh` in the terminal and follow the instructions
-- completion is available for 3 questions :
-    - Enter the path for the new new doctum course
-    - Enter the tag
-    - Enter the task description
+
+#### First start
+- At first start the doctum_helper will ask for default parameters :
+    - the path to the doctum_content directory (where doctum_content should be stored)
+
+#### Completion
+- Completion is available for 3 questions (use tab to trigger completion) :
+    - Enter the path for the new new doctum course : listing existing path in doctum_content folder 
+    - Enter the tag : showing doctum_content dir name as tag category
+    - Enter the task description : with default task description

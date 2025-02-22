@@ -16,7 +16,6 @@ def is_valid_json_path(term, file_path):
     #     return False
     return True
 
-
 def null_validate(answers, current):
     if not current:
         raise errors.ValidationError('', reason=" Please enter a value")

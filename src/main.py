@@ -11,13 +11,6 @@ from utils.completers import RelativePathCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path, null_validate, integer_validate, date_8601_validate, tag_validate
 
-## Get parameters
-parameters = get_parameters()
-default_doctum_path = parameters['doctum_path']
-
-## Initialize blessed terminal
-term = Terminal()
-
 def display_menu():
     questions = [
         inquirer.List('action',
@@ -50,10 +43,7 @@ def create_json_file():
         os.makedirs(directory)
         print(term.green(f"Created directory: {directory}"))
 
-    
-    ## default values
-    default_doctum_duration = 60
-    default_doctum_complexity = "medium"
+    ## default value for doctum_date_added (current date)
     default_doctum_date = datetime.datetime.now().strftime('%Y-%m-%d')
 
     ## main doctum data questions
@@ -80,7 +70,7 @@ def create_json_file():
     print(term.blue("Doctum task definition"))
     task_id=0
     while True:
-        print(term.grey(task_data) for task_data in data['task_list'])
+        print(*[term.purple(json.dumps(task_data)) for task_data in data['task_list']])
         main_task_question = [
             inquirer.Confirm("add_task", message="Adding a new task",default=False)
         ]
@@ -117,6 +107,7 @@ def create_json_file():
         print(term.red(f"Error creating JSON file: {e}"))
 
 def show_parameters():
+    parameters = get_parameters()
     for key, value in parameters.items():
         print(term.green(f"{key}: {value}"))
 
@@ -133,7 +124,14 @@ def main():
             show_parameters()
         elif action == "Edit parameters":
             edit_parameters()
-
-
+            
 if __name__ == "__main__":
+    ## Get parameters
+    parameters = get_parameters()
+    default_doctum_path = parameters['doctum_path']
+    default_doctum_duration = parameters['default_doctum_duration']
+    default_doctum_complexity = parameters['default_doctum_complexity']
+
+    ## Initialize blessed terminal
+    term = Terminal()
     main()
