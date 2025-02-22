@@ -1,9 +1,5 @@
 # doctum_helper
 
-## temp features 
-
-- prevent writing existing json file course
-
 ## Description
 
 A simple linux terminal application that help writing [doctum content (courses)](https://github.com/Draed/doctum_content) with correct json format.

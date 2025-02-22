@@ -27,10 +27,18 @@ def create_json_file():
     session = PromptSession(complete_while_typing=True)
 
     ## json file question
-    json_file_path_question = session.prompt(
-        f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}]: ",
-        completer=completer
-    )
+    while True:
+        json_file_path_question = session.prompt(
+            f"Enter the path for the new new doctum course [suggestions from {default_doctum_path}]: ",
+            completer=completer
+        )
+        
+        # Check if the input corresponds to an existing file
+        full_path = os.path.join(default_doctum_path, json_file_path_question)
+        if os.path.isfile(full_path):
+            print(term.red(f'Error: "{json_file_path_question}" already exist, please choose another name.'))
+        else:
+            break
     json_file_path = f"{default_doctum_path}/{json_file_path_question}"
 
     ## json file answer validation
