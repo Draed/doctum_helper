@@ -18,9 +18,36 @@ DOCTUM_HELPER_PATH_SRC=${DOCTUM_HELPER_PATH_SRC:-"./src"}
 DOCTUM_HELPER_ALIAS_DEFAULT=${DOCTUM_HELPER_ALIAS_DEFAULT:-"dh"}
 DOCTUM_HELPER_WRAPPER_PATH="$HOME/$DOCTUM_HELPER_BIN_PATH_DEFAULT/src/doctum_helper_wrapper.sh"
 
+DOCTUM_APT_PACKAGE_DEPENDENCIES=("pipx" "git")
+DOCTUM_PIPX_PACKAGE_DEPENDENCIES=("virtualenv")
+
 ####################################################
 #               utils function
 ####################################################
+
+install_apt_dependencies() {
+### install apt package dependencies ###
+  for APT_PACKAGE in "${DOCTUM_APT_PACKAGE_DEPENDENCIES[@]}"; do
+    apt_install_status=$(sudo apt install ${APT_PACKAGE})
+    if [ $apt_install_status -ne 0 ]; then
+      echo "Fail to install apt package : '${APT_PACKAGE}': ${apt_install_status}"
+    else
+      echo "apt package '${APT_PACKAGE}' successfully installed"
+    fi
+  done
+}
+
+install_pipx_dependencies() {
+### install pipx package dependencies ###
+  for PIPX_PACKAGE in "${DOCTUM_PIPX_PACKAGE_DEPENDENCIES[@]}"; do
+    pipx_install_status=$(pipx install ${PIPX_PACKAGE})
+    if [ $pipx_install_status -ne 0 ]; then
+      echo "Fail to install pipx package : '${PIPX_PACKAGE}' : ${pipx_install_status}"
+    else
+      echo "pipx package '${PIPX_PACKAGE}' successfully installed"
+    fi
+  done
+}
 
 create_alias_in_bashrc() {
 ### Create alias in bashrc ###
@@ -51,6 +78,10 @@ add_env_to_bashrc() {
 ####################################################
 #               main install function
 ####################################################
+
+## install package dependencies
+install_apt_dependencies
+install_pipx_dependencies
 
 ## copy doctum helper src to bin path
 mkdir -p $HOME/$DOCTUM_HELPER_BIN_PATH_DEFAULT
