@@ -38,14 +38,21 @@ bash install.sh
 #### Launch doctum_helper 
 - To start the program, just launch `dh` in the terminal and follow the instructions
 
-#### First start
+#### First start (parameters configuration)
 - At first start the doctum_helper will ask for default parameters :
     - the path to the doctum_content directory (where doctum_content should be stored)
+    - the path to doctum repository (where to execute git command)
+    - the default git remote name (default to 'origin')
+    - the default git branch name (default to 'main')
+    - the default git user name (default to 'doctum_helper')
+    - the default git user email (default to 'doctum_helper@mail.local')
+    - the activation parameter for git feature (if commit and push at any new course added or not)
     - the default course duration (in minutes)
     - the default course complexity (high, medium, low)
     - Some default task description to be used as completion (read article, see videos about, ...)
 
 #### Completion
+- When completion is available, it is advised in the question by "(use tab for completion)".
 - Completion is available for 3 questions (use tab to trigger completion) :
     - Enter the path for the new new doctum course : listing existing path in doctum_content folder 
     - Enter the tag : showing doctum_content dir name as tag category

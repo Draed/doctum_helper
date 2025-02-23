@@ -27,7 +27,7 @@ create_alias_in_bashrc() {
     ALIAS_NAME=$1
     ALIAS_COMMAND=$2
     ## force using latest value
-    unalias $ALIAS_NAME
+    unalias $ALIAS_NAME &>/dev/null
     if ! grep -q "alias $ALIAS_NAME=" $HOME/.bashrc; then
         echo "alias $ALIAS_NAME='$ALIAS_COMMAND'" >> $HOME/.bashrc
         echo "Alias '$ALIAS_NAME' added to .bashrc."
@@ -78,4 +78,5 @@ fi
 
 ## final message
 echo "Doctum helper successfully installed, use 'dh' to launch it"
+source $HOME/.bashrc
 # echo "run 'source $HOME/.bashrc' in order to use alias '${DOCTUM_HELPER_ALIAS_DEFAULT}'"

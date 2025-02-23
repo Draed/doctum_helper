@@ -10,6 +10,7 @@ from prompt_toolkit.completion import PathCompleter
 from utils.completers import RelativePathCompleter, TagCompleter, ListCompleter
 from utils.parameters import get_parameters, edit_parameters
 from utils.validators import is_valid_json_path, null_validate, integer_validate, date_8601_validate, tag_validate
+from utils.git_utils import git_commit_and_push, git_pull
 
 def display_menu():
     questions = [
@@ -25,6 +26,9 @@ def create_json_file():
     ## custom completer instanciation
     completer = RelativePathCompleter(base_directory=default_doctum_path)
     session = PromptSession(complete_while_typing=True)
+
+    if parameters['default_doctum_git_feature']:
+        git_pull(term, parameters['default_doctum_repo_path'], parameters['default_doctum_remote_name'], parameters['default_doctum_branch_name'])
 
     ## json file question
     while True:
@@ -102,7 +106,7 @@ def create_json_file():
             )
             ## task duration question
             content_task_question = [
-                inquirer.Text("task_duration", message="Enter task duration (in minutes)", default=default_doctum_duration, validate=integer_validate),
+                inquirer.Text("task_duration", message="Enter task duration (in minutes)", default=default_doctum_task_duration, validate=integer_validate),
             ]
             content_task_answers = inquirer.prompt(content_task_question)
             data['task_list'].append({
@@ -128,8 +132,13 @@ def create_json_file():
     except Exception as e:
         print(term.red(f"Error creating JSON file: {e}"))
 
+    ## Commit and push
+    if parameters['default_doctum_git_feature']:
+        commit_message = f"Adding course {json_file_path_question}"
+        git_commit_and_push(term, parameters['default_doctum_repo_path'], commit_message , parameters['default_doctum_remote_name'], parameters['default_doctum_branch_name'])
+
 def show_parameters():
-    parameters = get_parameters()
+    parameters = get_parameters(term)
     for key, value in parameters.items():
         print(term.green(f"{key}: {value}"))
 
@@ -145,16 +154,18 @@ def main():
         elif action == "Show parameters":
             show_parameters()
         elif action == "Edit parameters":
-            edit_parameters()
+            edit_parameters(term)
             
 if __name__ == "__main__":
+    ## Initialize blessed terminal
+    term = Terminal()
+
     ## Get parameters
-    parameters = get_parameters()
+    parameters = get_parameters(term)
     default_doctum_path = parameters['doctum_path']
     default_doctum_duration = parameters['default_doctum_duration']
     default_doctum_complexity = parameters['default_doctum_complexity']
     default_doctum_task_description = parameters['default_doctum_task_description']
+    default_doctum_task_duration = parameters['default_doctum_task_duration']
 
-    ## Initialize blessed terminal
-    term = Terminal()
     main()
